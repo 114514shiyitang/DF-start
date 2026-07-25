@@ -19,23 +19,23 @@
             scroll-behavior: smooth;
         }
 
-        /* 登录弹窗 稳定动画方案 */
+        /* 登录弹窗动画 */
         .login-mask {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: rgba(6, 10, 14, 0.98);
+            background-color: rgba(6, 10, 14, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
-        .login-mask.hide {
+        .login-mask.fade-out {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -50,7 +50,7 @@
             transform: scale(1);
             transition: transform 0.5s ease;
         }
-        .login-mask.hide .login-box {
+        .login-mask.fade-out .login-box {
             transform: scale(0.9);
         }
         .login-box h2 {
@@ -102,6 +102,9 @@
             background: linear-gradient(90deg,#29b88c,#1c9c75);
             cursor: pointer;
             transition: all 0.25s;
+            position:relative;
+            z-index:10;
+            pointer-events:auto !important;
         }
         .enter-btn:hover {
             transform: scale(1.02);
@@ -139,6 +142,52 @@
             transform:scale(1.1);
         }
 
+        /* 页面层叠布局，DOM常驻，动画不会失效 */
+        .page-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .main-page, .detail-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height:100vh;
+            transition: opacity 0.7s ease, visibility 0.7s ease;
+        }
+        .main-page {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events:none;
+            z-index: 1;
+        }
+        .main-page.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events:auto;
+            z-index: 10;
+        }
+        .detail-page {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events:none;
+            z-index: 2;
+        }
+        .detail-page.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events:auto;
+            z-index: 10;
+        }
+
+        .user-greet{
+            padding:20px 16px;
+            max-width:1100px;
+            margin:0 auto;
+            font-size:22px;
+            color:#56e2bb;
+        }
+
         header {
             background: linear-gradient(90deg, #0e2824, #133a34);
             text-align: center;
@@ -160,19 +209,52 @@
             padding: 20px 16px;
         }
 
-        /* 滚动入场动画样式 */
         .news-block {
             background-color: #161d23;
             border-radius: 14px;
             padding: 26px;
-            margin-top: 40px;
+            margin-top: 40px; /* 增大卡片间距，视觉宽松 */
             border: 1px solid #223330;
             opacity: 0;
             transform: translateY(45px);
             transition: opacity 0.7s ease, transform 0.7s ease;
+            pointer-events:auto !important;
         }
         .news-block.active {
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* img11 从左向右滑入 */
+        .anim-from-left{
+            opacity:0;
+            transform: translateX(-80px);
+            transition: all 0.7s ease;
+        }
+        .anim-from-left.active{
+            opacity:1;
+            transform: translateX(0);
+        }
+
+        /* img12 从右向左滑入 */
+        .anim-from-right{
+            opacity:0;
+            transform: translateX(80px);
+            transition: all 0.7s ease;
+        }
+        .anim-from-right.active{
+            opacity:1;
+            transform: translateX(0);
+        }
+
+        /* img13~img17 统一上浮淡入动画 */
+        .anim-fade-up{
+            opacity:0;
+            transform: translateY(50px);
+            transition: all 0.7s ease;
+        }
+        .anim-fade-up.active{
+            opacity:1;
             transform: translateY(0);
         }
 
@@ -195,6 +277,7 @@
         .news-block img:hover{
             transform: scale(1.03);
         }
+        /* 优化：减少上方间距，消除按钮底部大片空白 */
         .jump-area {
             margin-top: 35px;
             margin-bottom:60px;
@@ -202,8 +285,9 @@
             opacity: 0;
             transform: translateY(45px);
             transition: opacity 0.7s ease, transform 0.7s ease;
+            pointer-events:auto !important;
         }
-        .jump-area.active{
+        .jump-area.active {
             opacity: 1;
             transform: translateY(0);
         }
@@ -215,6 +299,9 @@
             font-weight: bold;
             border-radius: 10px;
             transition: all 0.25s;
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 100;
             border:none;
             cursor:pointer;
         }
@@ -241,74 +328,128 @@
     </div>
 </div>
 
-<header>
-    <h1>三角洲行动-烽火新内容速知</h1>
-</header>
-<div class="container">
-    <div class="news-block">
-        <h2>1.全新干员-液氮 即将上线</h2>
-        <img src="img1.jpg" alt="干员液氮海报">
-        <p>全新干员液氮即将上线，他的出现是否能让AZ3的事故有所转机？</p>
+<div class="page-wrap">
+    <!-- 第一页资讯首页 -->
+    <div class="main-page" id="mainContent">
+        <header>
+            <h1>三角洲行动-烽火新内容速知</h1>
+        </header>
+        <div class="container">
+            <div class="news-block">
+                <h2>1.全新干员-液氮 即将上线</h2>
+                <img src="img1.jpg" alt="干员液氮海报">
+                <p>全新干员液氮即将上线，他的出现是否能让AZ3的事故有所转机？</p>
+            </div>
+            <div class="news-block">
+                <h2>2.全新地图-AZ3 即将上线</h2>
+                <img src="img2.jpg" alt="AZ3新地图海报">
+                <p>这里是AZ3园区，现在这里面临着一场核安全事故，哈夫克内部人员已无法控制这场事故，而身为GTI派遣而来的干员，你的抉择将会决定AZ3结局的走向</p>
+            </div>
+            <div class="news-block">
+                <h2>3.全新首领-H1000脑机特工</h2>
+                <img src="img3.jpg" alt="首领H1000脑机特工海报">
+                <p>脑机特工H1000会出现在AZ3的核心区域，他带来的挑战让这次行动更加困难，不过在此之前，你能否克服H800和H47带来的挑战呢？</p>
+            </div>
+            <div class="news-block">
+                <h2>4.全新突击步枪-RM277突击步枪</h2>
+                <img src="img4.jpg" alt="RM277突击步枪">
+                <p>它是6.8×51口径系列的步枪，拥有良好的优势射程以及精准度</p>
+            </div>
+            <div class="news-block">
+                <h2>5.全新射手步枪-SVCH射手步枪</h2>
+                <img src="img5.jpg" alt="SVCH射手步枪">
+                <p>它虽然是一把射手步枪，但它却拥有独特的全自动改件，但它的全自动改件带来的后坐力你能克服呢？</p>
+            </div>
+            <div class="news-block">
+                <h2>6.全新联动-彩虹六号：围攻</h2>
+                <img src="img6.jpg" alt="彩虹六号联动主海报">
+                <p>本次联动将给大家带来《彩虹六号：围攻》中的部分干员、道具以及枪械皮肤</p>
+                <h2 style="margin-top:30px;font-size:22px;">全新联动收藏品-无人机</h2>
+                <img src="img7.jpg" alt="联动无人机">
+                <p>全新联动收藏品无人机即将到来，它是《彩虹六号：围攻》中，进攻方获取信息的重要道具，现在它可以在武器箱中概率获取</p>
+                <h2 style="margin-top:30px;font-size:22px;">全新联动干员皮肤-医生、盾峰、守夜人</h2>
+                <img src="img8.jpg" alt="蜂医-医生">
+                <br><br>
+                <img src="img9.jpg" alt="深蓝-盾峰">
+                <br><br>
+                <img src="img10.jpg" alt="无名-守夜人">
+                <p style="margin-top:16px;">本次联动为大家带来了三位《彩虹六号：围攻》中的干员，并且可以自选两位干员免费获取</p>
+            </div>
+            <div class="jump-area">
+                <button type="button" class="jump-btn" id="goDetailBtn">进入主页</button>
+            </div>
+        </div>
     </div>
-    <div class="news-block">
-        <h2>2.全新地图-AZ3 即将上线</h2>
-        <img src="img2.jpg" alt="AZ3新地图海报">
-        <p>这里是AZ3园区，现在这里面临着一场核安全事故，哈夫克内部人员已无法控制这场事故，而身为GTI派遣而来的干员，你的抉择将会决定AZ3结局的走向</p>
-    </div>
-    <div class="news-block">
-        <h2>3.全新首领-H1000脑机特工</h2>
-        <img src="img3.jpg" alt="首领H1000脑机特工海报">
-        <p>脑机特工H1000会出现在AZ3的核心区域，他带来的挑战让这次行动更加困难，不过在此之前，你能否克服H800和H47带来的挑战呢？</p>
-    </div>
-    <div class="news-block">
-        <h2>4.全新突击步枪-RM277突击步枪</h2>
-        <img src="img4.jpg" alt="RM277突击步枪">
-        <p>它是6.8×51口径系列的步枪，拥有良好的优势射程以及精准度</p>
-    </div>
-    <div class="news-block">
-        <h2>5.全新射手步枪-SVCH射手步枪</h2>
-        <img src="img5.jpg" alt="SVCH射手步枪">
-        <p>它虽然是一把射手步枪，但它却拥有独特的全自动改件，但它的全自动改件带来的后坐力你能克服呢？</p>
-    </div>
-    <div class="news-block">
-        <h2>6.全新联动-彩虹六号：围攻</h2>
-        <img src="img6.jpg" alt="彩虹六号联动主海报">
-        <p>本次联动将给大家带来《彩虹六号：围攻》中的部分干员、道具以及枪械皮肤</p>
-        <h2 style="margin-top:30px;font-size:22px;">全新联动收藏品-无人机</h2>
-        <img src="img7.jpg" alt="联动无人机">
-        <p>全新联动收藏品无人机即将到来，它是《彩虹六号：围攻》中，进攻方获取信息的重要道具，现在它可以在武器箱中概率获取</p>
-        <h2 style="margin-top:30px;font-size:22px;">全新联动干员皮肤-医生、盾峰、守夜人</h2>
-        <img src="img8.jpg" alt="蜂医-医生">
-        <br><br>
-        <img src="img9.jpg" alt="深蓝-盾峰">
-        <br><br>
-        <img src="img10.jpg" alt="无名-守夜人">
-        <p style="margin-top:16px;">本次联动为大家带来了三位《彩虹六号：围攻》中的干员，并且可以自选两位干员免费获取</p>
-    </div>
-    <div class="jump-area">
-        <button type="button" class="jump-btn" id="goDetailBtn">进入主页</button>
+    <!-- 第二页详情主页 img11~img17 -->
+    <div class="detail-page" id="detailContent">
+        <header>
+            <h1>三角洲行动｜裂变赛季全新内容</h1>
+        </header>
+        <div class="user-greet" id="greetText"></div>
+        <div class="container">
+            <!-- img11：从左向右滑入 -->
+            <div class="news-block anim-from-left">
+                <h2>赛季序幕：冰封过往，纵身向前</h2>
+                <img src="img11.jpg" alt="裂变赛季主视觉海报">
+                <p>6月26日全新「裂变」赛季正式开启，AZ3核危机事件拉开帷幕，新的危机正在等待所有干员。</p>
+            </div>
+            <!-- img12：从右向左滑入 -->
+            <div class="news-block anim-from-right">
+                <h2>全新干员：液氮</h2>
+                <img src="img12.jpg" alt="干员液氮宣传图">
+                <p>工程型干员液氮登场，投掷冷罐冻结战场，利用冷冻装置限制敌人走位，掌控战场主动权。</p>
+            </div>
+            <!-- img13~img17：统一优雅上浮淡入 -->
+            <div class="news-block anim-fade-up">
+                <h2>烽火地带新地图 AZ3</h2>
+                <img src="img13.jpg" alt="AZ3园区地图">
+                <p>危机四伏的核设施园区，反应堆暗藏风险，多方势力在此交锋，你的选择将决定园区最终命运。</p>
+            </div>
+            <div class="news-block anim-fade-up">
+                <h2>全新首领：H1000脑机特工</h2>
+                <img src="img14.jpg" alt="BOSS H1000">
+                <p>AZ3核心区域镇守首领，身手敏捷、枪法凶悍，击败它可以获取高价值稀有物资。</p>
+            </div>
+            <div class="news-block anim-fade-up">
+                <h2>全面战场新地图：克劳狄斗兽场</h2>
+                <img src="img15.jpg" alt="斗兽场地图">
+                <p>古罗马斗兽场废墟，大规模多人攻防战场，近距离激烈交火，上演困兽之斗。</p>
+            </div>
+            <div class="news-block anim-fade-up">
+                <h2>全新载具 CSV-35运输直升机</h2>
+                <img src="img16.jpg" alt="CSV35直升机">
+                <p>奇兵天降！空中运输载具，可以快速带领小队转移，从空中发起突袭作战。</p>
+            </div>
+            <div class="news-block anim-fade-up">
+                <h2>两把全新枪械登场</h2>
+                <img src="img17.jpg" alt="RM277 & SVCH枪械">
+                <p>RM277突击步枪拥有优秀远距性能；SVCH射手步枪支持全自动改装，远近作战皆可胜任。</p>
+            </div>
+            <!-- 紧贴最后卡片，减少底部空白 -->
+            <div class="jump-area">
+                <button type="button" class="jump-btn" id="openGameBtn">即刻体验</button>
+            </div>
+        </div>
     </div>
 </div>
-
 <script>
 const errorTip = document.getElementById("errorTip");
 const inputDom = document.getElementById("playerId");
 const backTop = document.getElementById("backTop");
 const loginBtn = document.getElementById("loginBtn");
 const goDetailBtn = document.getElementById("goDetailBtn");
+const openGameBtn = document.getElementById("openGameBtn");
 const loginWindow = document.getElementById("loginWindow");
+const mainContent = document.getElementById("mainContent");
+const detailContent = document.getElementById("detailContent");
+const greetText = document.getElementById("greetText");
 
 let playerName = "";
 const reg = /^[\u4e00-\u9fa5a-zA-Z]+$/;
 
-// 页面载入直接弹窗显示
-window.addEventListener('load', () => {
-    loginWindow.classList.remove('hide');
-});
-
-// 滚动区块渐入监听
-const observerList = document.querySelectorAll('.news-block, .jump-area');
-const scrollObserver = new IntersectionObserver((entries) => {
+//页面加载初始化首页动画监听
+const mainItems = document.querySelectorAll('.main-page .news-block, .main-page .jump-area');
+const mainObserver = new IntersectionObserver((entries) => {
     entries.forEach(item => {
         if(item.isIntersecting){
             item.target.classList.remove('active');
@@ -317,7 +458,20 @@ const scrollObserver = new IntersectionObserver((entries) => {
         }
     });
 }, {threshold: 0.12});
-observerList.forEach(el => scrollObserver.observe(el));
+mainItems.forEach(el => mainObserver.observe(el));
+
+//第二页(img11~img17)动画监听，提前绑定，永久生效
+const detailItems = document.querySelectorAll('.detail-page .news-block, .detail-page .jump-area');
+const detailObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(item=>{
+        if(item.isIntersecting){
+            item.target.classList.remove('active');
+            void item.target.offsetWidth;
+            item.target.classList.add('active');
+        }
+    })
+},{threshold:0.12});
+detailItems.forEach(el=>detailObserver.observe(el));
 
 //禁止粘贴ID
 inputDom.addEventListener('paste',e=>e.preventDefault());
@@ -327,7 +481,6 @@ inputDom.addEventListener('keydown',e=>{
 });
 loginBtn.addEventListener('click', checkAndEnter);
 
-//登录校验函数
 function checkAndEnter(){
     let idValue = inputDom.value.trim();
     errorTip.classList.remove("show");
@@ -342,4 +495,38 @@ function checkAndEnter(){
         errorTip.classList.add("show");
         return;
     }
-    if(idValue.le
+    if(idValue.length > 14){
+        errorTip.innerText = "ID最多为14个字符";
+        errorTip.classList.add("show");
+        return;
+    }
+    playerName = idValue;
+    loginWindow.classList.add("fade-out");
+    mainContent.classList.add("active");
+}
+
+//页面切换，无延时，Edge浏览器完美兼容
+goDetailBtn.addEventListener('click', function(){
+    greetText.innerText = playerName + "你好";
+    window.scrollTo(0,0);
+    mainContent.classList.remove("active");
+    detailContent.classList.add("active");
+});
+
+//回到顶部按钮
+window.addEventListener('scroll',function(){
+    if(window.scrollY > 300){
+        backTop.classList.add('show');
+    }else{
+        backTop.classList.remove('show');
+    }
+});
+backTop.addEventListener('click',function(){
+    window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// 点击即刻体验直接打开官网
+openGameBtn.addEventListener('click', function() {
+    window.open("https://df.qq.com", "_blank");
+});
+</script>
