@@ -184,7 +184,6 @@
             text-decoration: none;
             border-radius: 10px;
             transition: all 0.25s;
-            /* 修复点击穿透失效 */
             pointer-events: auto !important;
             position: relative;
             z-index: 10;
@@ -217,54 +216,53 @@
 <div class="container">
     <div class="news-block">
         <h2>1.全新干员-液氮 即将上线</h2>
-        <img src="images/img1.jpeg" alt="干员液氮海报">
+        <img src="images/img1.jpg" alt="干员液氮海报">
         <p>全新干员液氮即将上线，他的出现是否能让AZ3的事故有所转机？</p>
     </div>
 
     <div class="news-block">
         <h2>2.全新地图-AZ3 即将上线</h2>
-        <img src="images/img2.jpeg" alt="AZ3新地图海报">
+        <img src="images/img2.jpg" alt="AZ3新地图海报">
         <p>这里是AZ3园区，现在这里面临着一场核安全事故，哈夫克内部人员已无法控制这场事故，而身为GTI派遣而来的干员，你的抉择将会决定AZ3结局的走向</p>
     </div>
 
     <div class="news-block">
         <h2>3.全新首领-H1000脑机特工</h2>
-        <img src="images/img3.jpeg" alt="首领H1000脑机特工海报">
+        <img src="images/img3.jpg" alt="首领H1000脑机特工海报">
         <p>脑机特工H1000会出现在AZ3的核心区域，他带来的挑战让这次行动更加困难，不过在此之前，你能否克服H800和H47带来的挑战呢？</p>
     </div>
 
     <div class="news-block">
         <h2>4.全新突击步枪-RM277突击步枪</h2>
-        <img src="images/img4.jpeg" alt="RM277突击步枪">
+        <img src="images/img4.jpg" alt="RM277突击步枪">
         <p>它是6.8×51口径系列的步枪，拥有良好的优势射程以及精准度</p>
     </div>
 
     <div class="news-block">
         <h2>5.全新射手步枪-SVCH射手步枪</h2>
-        <img src="images/img5.jpeg" alt="SVCH射手步枪">
+        <img src="images/img5.jpg" alt="SVCH射手步枪">
         <p>它虽然是一把射手步枪，但它却拥有独特的全自动改件，但它的全自动改件带来的后坐力你能克服呢？</p>
     </div>
 
     <div class="news-block">
         <h2>6.全新联动-彩虹六号：围攻</h2>
-        <img src="images/img6.jpeg" alt="彩虹六号联动主海报">
+        <img src="images/img6.jpg" alt="彩虹六号联动主海报">
         <p>本次联动将给大家带来《彩虹六号：围攻》中的部分干员、道具以及枪械皮肤</p>
 
         <h2 style="margin-top:30px;font-size:22px;">全新联动收藏品-无人机</h2>
-        <img src="images/img7.jpeg" alt="联动无人机">
+        <img src="images/img7.jpg" alt="联动无人机">
         <p>全新联动收藏品无人机即将到来，它是《彩虹六号：围攻》中，进攻方获取信息的重要道具，现在它可以在武器箱中概率获取</p>
 
         <h2 style="margin-top:30px;font-size:22px;">全新联动干员皮肤-医生、盾峰、守夜人</h2>
-        <img src="images/img8.jpeg" alt="蜂医-医生">
+        <img src="images/img8.jpg" alt="蜂医-医生">
         <br><br>
-        <img src="images/img9.jpeg" alt="深蓝-盾峰">
+        <img src="images/img9.jpg" alt="深蓝-盾峰">
         <br><br>
-        <img src="images/img10.jpeg" alt="无名-守夜人">
+        <img src="images/img10.jpg" alt="无名-守夜人">
         <p style="margin-top:16px;">本次联动为大家带来了三位《彩虹六号：围攻》中的干员，并且可以自选两位干员免费获取</p>
     </div>
 
     <div class="jump-area">
-        <!-- target="_blank" 可选：新标签打开官网 -->
         <a href="https://df.qq.com" target="_blank" class="jump-btn">即刻体验</a>
     </div>
 </div>
@@ -304,7 +302,7 @@ function enterWebsite(){
         return;
     }
 
-    //全部校验通过，进入页面动画
+    //全部校验通过，执行登录淡出动画
     const mask = document.getElementById("loginWindow");
     const main = document.getElementById("mainContent");
     mask.classList.add("fade-out");
