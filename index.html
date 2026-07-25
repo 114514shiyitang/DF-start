@@ -19,23 +19,26 @@
             scroll-behavior: smooth;
         }
 
-        /* 登录弹窗 渐入动画 */
+        /* 登录弹窗 稳定动画方案 */
         .login-mask {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: rgba(6, 10, 14, 0.95);
+            background-color: rgba(6, 10, 14, 0.98);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .login-mask.show {
             opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .login-mask.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
         .login-box {
             background-color: #161d23;
@@ -44,11 +47,11 @@
             padding: 40px 30px;
             width: min(90%, 420px);
             text-align: center;
-            transform: scale(0.9);
+            transform: scale(1);
             transition: transform 0.5s ease;
         }
-        .login-mask.show .login-box {
-            transform: scale(1);
+        .login-mask.hide .login-box {
+            transform: scale(0.9);
         }
         .login-box h2 {
             color: #36e0b4;
@@ -298,14 +301,12 @@ const loginWindow = document.getElementById("loginWindow");
 let playerName = "";
 const reg = /^[\u4e00-\u9fa5a-zA-Z]+$/;
 
-// 页面加载完成后触发弹窗渐入
-window.addEventListener('load',()=>{
-    setTimeout(()=>{
-        loginWindow.classList.add('show');
-    },100);
+// 页面载入直接弹窗显示
+window.addEventListener('load', () => {
+    loginWindow.classList.remove('hide');
 });
 
-// 滚动观察器，恢复入场动画
+// 滚动区块渐入监听
 const observerList = document.querySelectorAll('.news-block, .jump-area');
 const scrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(item => {
@@ -326,6 +327,7 @@ inputDom.addEventListener('keydown',e=>{
 });
 loginBtn.addEventListener('click', checkAndEnter);
 
+//登录校验函数
 function checkAndEnter(){
     let idValue = inputDom.value.trim();
     errorTip.classList.remove("show");
@@ -340,6 +342,4 @@ function checkAndEnter(){
         errorTip.classList.add("show");
         return;
     }
-    if(idValue.length > 14){
-        errorTip.innerText = "ID最多为14个字符";
-        errorTip.classList.add("show");
+    if(idValue.le
